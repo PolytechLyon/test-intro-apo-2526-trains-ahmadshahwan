@@ -40,11 +40,31 @@ jobs:
         command: mvn test -Dtest=DijkstraTest#testReadGrenobleAsFirstArgument
         timeout: 10
         max-score: 3
+    - name: testPrintEdgesWhenNoArgs
+      id: testprintedgeswhennoargs
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testPrintEdgesWhenNoArgs
+        setup-command: ''
+        command: " mvn test -Dtest=DijkstraTest#testPrintEdgesWhenNoArgs"
+        timeout: 10
+        max-score: 7
+    - name: testEntryPointClassName
+      id: testentrypointclassname
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testEntryPointClassName
+        setup-command: ''
+        command: mvn test -Dtest=DijkstraTest#testEntryPointClassName
+        timeout: 10
+        max-score: 5
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
         TESTCALCULATEPATHS_RESULTS: "${{steps.testcalculatepaths.outputs.result}}"
         TESTCALCULATEDISTANCES_RESULTS: "${{steps.testcalculatedistances.outputs.result}}"
         TESTREADGRENOBLEASFIRSTARGUMENT_RESULTS: "${{steps.testreadgrenobleasfirstargument.outputs.result}}"
+        TESTPRINTEDGESWHENNOARGS_RESULTS: "${{steps.testprintedgeswhennoargs.outputs.result}}"
+        TESTENTRYPOINTCLASSNAME_RESULTS: "${{steps.testentrypointclassname.outputs.result}}"
       with:
-        runners: testcalculatepaths,testcalculatedistances,testreadgrenobleasfirstargument
+        runners: testcalculatepaths,testcalculatedistances,testreadgrenobleasfirstargument,testprintedgeswhennoargs,testentrypointclassname
