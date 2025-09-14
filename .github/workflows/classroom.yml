@@ -1,0 +1,50 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: testCalculatePaths
+      id: testcalculatepaths
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testCalculatePaths
+        setup-command: ''
+        command: mvn test -Dtest=DijkstraTest#testCalculatePaths
+        timeout: 10
+        max-score: 1
+    - name: testCalculateDistances
+      id: testcalculatedistances
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testCalculateDistances
+        setup-command: ''
+        command: mvn test -Dtest=DijkstraTest#testCalculateDistances
+        timeout: 10
+        max-score: 2
+    - name: testReadGrenobleAsFirstArgument
+      id: testreadgrenobleasfirstargument
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testReadGrenobleAsFirstArgument
+        setup-command: ''
+        command: mvn test -Dtest=DijkstraTest#testReadGrenobleAsFirstArgument
+        timeout: 10
+        max-score: 3
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTCALCULATEPATHS_RESULTS: "${{steps.testcalculatepaths.outputs.result}}"
+        TESTCALCULATEDISTANCES_RESULTS: "${{steps.testcalculatedistances.outputs.result}}"
+        TESTREADGRENOBLEASFIRSTARGUMENT_RESULTS: "${{steps.testreadgrenobleasfirstargument.outputs.result}}"
+      with:
+        runners: testcalculatepaths,testcalculatedistances,testreadgrenobleasfirstargument
